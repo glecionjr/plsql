@@ -1,0 +1,31 @@
+-- Responsibility: Replace some chars from a original text using ASCII Code with CHR and REPLACE Oracle function.
+ 
+
+FUNCTION FReplaceChar(pText CLOB)
+    RETURN CLOB
+IS
+    TYPE varray_type IS VARRAY(50) OF INTEGER;
+    v2 varray_type;
+    v_text_modified CLOB;
+    len INTEGER;
+    
+BEGIN
+    v2 := varray_type
+                 (9,        -- Tab Horizontal
+                 10,        -- Line feed (LF)
+                 191);      -- Carriage Return (CR)    
+
+    v_text_modified := pText;
+    
+    len:= v2.count;
+    
+    FOR i IN 1..len LOOP
+        v_text_modified := replace 
+                                     (v_text_modified,     
+                                      CHR(v2(i)),          
+                                      lpad(null,1, ' '));
+    END LOOP;
+
+    return v_text_modified;
+    
+END FReplaceChar;
